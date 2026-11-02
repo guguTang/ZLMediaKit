@@ -132,7 +132,8 @@ const char *getCodecName(CodecId codec) {
 }
 
 #define XX(name, type, value, str, mpeg_id, mp4_id) {str, name},
-static map<string, CodecId, StrCaseCompare> codec_map = { CODEC_MAP(XX) };
+// CODEC_MAP 里 L16 规范名为 "L16"；SDP 常见别名 "PCM" 只进名字表，不新增枚举。
+static map<string, CodecId, StrCaseCompare> codec_map = { CODEC_MAP(XX) { "PCM", CodecL16 } };
 #undef XX
 
 CodecId getCodecId(const string &str){

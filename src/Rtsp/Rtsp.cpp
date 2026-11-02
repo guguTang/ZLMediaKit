@@ -280,9 +280,14 @@ void SdpParser::load(const string &sdp) {
                 track._samplerate = samplerate;
                 track._channel = channel;
             } else if (3 == sscanf(rtpmap.data(), "%d %15[^/]/%d", &pt, codec, &samplerate)) {
+                // RFC4566：音频 rtpmap 可省略 encoding parameters（声道数），缺省为 1。
+                // 与 webrtc/Sdp.cpp 行为对齐；此前留 0 会导致 L16 等音轨建失败。
                 track._pt = pt;
                 track._codec = codec;
                 track._samplerate = samplerate;
+                if (track._type == TrackAudio) {
+                    track._channel = 1;
+                }
             }
             ++it;
         }
